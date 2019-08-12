@@ -19,6 +19,7 @@
             android:layout_height="match_parent">
 
             <ImageView
+                android:src="@raw/loading"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/movie_cover_height"
                 android:id="@+id/thumbnail"

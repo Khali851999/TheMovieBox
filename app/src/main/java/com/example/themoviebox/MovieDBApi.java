@@ -9,24 +9,28 @@ import retrofit2.Retrofit.Builder;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public class MovieDBApi {
 
     public static final String API_KEY = "2662a6a7ebcb864e1ca43389e4660dcf";
     public static final String BASE_URL = "https://api.themoviedb.org/3/movie/";
 
-    public static Retrofit retrofit = null;
+    public static MovieService movieService = null;
 
-    public static Retrofit getRetrofit() {
-        if (retrofit == null) {
+    public static MovieService getMovieService() {
 
-            retrofit = new Retrofit.Builder()
+        if (movieService == null) {
+
+            Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
+            movieService = retrofit.create(MovieService.class);
+
         }
-        return retrofit;
+        return movieService;
     }
 
     public interface MovieService {
@@ -36,6 +40,9 @@ public class MovieDBApi {
 
         @GET("{movie_id}/videos?key=" + API_KEY)
         Call<Trailer> getTrailerDetails(@Path("movie_id") int movie_id);
+
+        @GET("popular?key=" + API_KEY + "?page={page_no}")
+        Call<Movie> getMoreMovieDetails(@Path("page_no") int page_no);
 
 //        @GET("{movie_id}/videos")
 //        Call<Trailer> getMovieTrailer(@Path("movie_id") int id, @Query("api_key") String apiKey);

@@ -1,6 +1,7 @@
 
 package com.example.themoviebox.Model;
 
+import java.util.ArrayList;
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -16,9 +17,9 @@ public class Movie {
     @SerializedName("total_pages")
     @Expose
     private int totalPages;
-    @SerializedName("movieResults")
+    @SerializedName("results")
     @Expose
-    private List<MovieResult> movieResults = null;
+    public List<MovieResult> movieResults = null;
 
     public int getPage() {
         return page;
