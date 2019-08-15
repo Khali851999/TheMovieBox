@@ -41,8 +41,8 @@ public class MovieDBApi {
         @GET("{movie_id}/videos?key=" + API_KEY)
         Call<Trailer> getTrailerDetails(@Path("movie_id") int movie_id);
 
-        @GET("popular?key=" + API_KEY + "?page={page_no}")
-        Call<Movie> getMoreMovieDetails(@Path("page_no") int page_no);
+        @GET("popular")
+        Call<Movie> getMoreMovieDetails(@Query("key") String API_KEY, @Query("page") int page_no);
 
 //        @GET("{movie_id}/videos")
 //        Call<Trailer> getMovieTrailer(@Path("movie_id") int id, @Query("api_key") String apiKey);
