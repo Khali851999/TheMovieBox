@@ -13,6 +13,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.themoviebox.ActicityPosterView;
 import com.example.themoviebox.Model.MovieResult;
 import com.example.themoviebox.MovieDetailsActivity;
 import com.example.themoviebox.R;
@@ -63,6 +64,14 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
                 .load("https://image.tmdb.org/t/p/w500" + movieResultArrayList.get(position).getPosterPath())
                 .centerCrop()
                 .into(holder.thumbnail);
+//        holder.thumbnail.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                Intent intent = new Intent(context, ActicityPosterView.class);
+//                context.startActivity(intent);
+//            }
+//        });
         holder.title.setText(movieResultArrayList.get(position).getTitle());
         holder.userrating.setText(movieResultArrayList.get(position).getVoteAverage() + "");
         holder.card_view.setOnClickListener(new View.OnClickListener() {
