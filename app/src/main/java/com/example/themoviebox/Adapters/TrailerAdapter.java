@@ -16,14 +16,15 @@ import com.example.themoviebox.Model.TrailerResult;
 import com.example.themoviebox.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerViewHolder> {
 
-    ArrayList<TrailerResult> trailerResultArrayList;
+    List<TrailerResult> trailerResultList;
     Context context;
 
-    public TrailerAdapter(ArrayList<TrailerResult> trailerResultArrayList, Context context) {
-        this.trailerResultArrayList = trailerResultArrayList;
+    public TrailerAdapter(List<TrailerResult> trailerResultList, Context context) {
+        this.trailerResultList = trailerResultList;
         this.context = context;
     }
 
@@ -47,12 +48,12 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
 
     @Override
     public void onBindViewHolder(@NonNull TrailerViewHolder holder, final int position) {
-        holder.title.setText(trailerResultArrayList.get(position).getName());
+        holder.title.setText(trailerResultList.get(position).getName());
         holder.card_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse(trailerResultArrayList.get(position).getSite()));
+                intent.setData(Uri.parse("https://www.youtube.com/watch?v=" + trailerResultList.get(position).getKey()));
                 context.startActivity(intent);
             }
         });
@@ -60,6 +61,6 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
 
     @Override
     public int getItemCount() {
-        return trailerResultArrayList.size();
+        return trailerResultList.size();
     }
 }

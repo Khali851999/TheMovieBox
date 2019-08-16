@@ -2,6 +2,7 @@ package com.example.themoviebox;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -129,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
                 movieAdapter = new MovieAdapter(movieResultArrayList, MainActivity.this);
                 recyclerView.setAdapter(movieAdapter);
                 recyclerView.setLayoutManager(layoutManager);
+                recyclerView.setItemAnimator(new DefaultItemAnimator());
 
                 swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
@@ -137,6 +139,7 @@ public class MainActivity extends AppCompatActivity {
                         recyclerView.setAdapter(movieAdapter);
                         recyclerView.setLayoutManager(layoutManager);
                         recyclerView.smoothScrollToPosition(0);
+                        recyclerView.setItemAnimator(new DefaultItemAnimator());
                         swipeRefreshLayout.setRefreshing(false);
                     }
                 });

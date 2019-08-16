@@ -35,14 +35,17 @@ public class MovieDBApi {
 
     public interface MovieService {
 
-        @GET("popular?key=" + API_KEY)
+        @GET("upcoming?api_key=" + API_KEY)
         Call<Movie> getMovieDetails();
 
-        @GET("{movie_id}/videos?key=" + API_KEY)
+        @GET("{movie_id}/videos?api_key=" + API_KEY)
         Call<Trailer> getTrailerDetails(@Path("movie_id") int movie_id);
 
-        @GET("popular")
-        Call<Movie> getMoreMovieDetails(@Query("key") String API_KEY, @Query("page") int page_no);
+        @GET("upcoming")
+        Call<Movie> getMoreMovieDetails(@Query("api_key") String API_KEY, @Query("page") int page_no);
+
+        @GET("{movie_id}/similar?api_key=" + API_KEY)
+        Call<Movie> getSimilarMovies(@Path("movie_id") int movie_id);
 
 //        @GET("{movie_id}/videos")
 //        Call<Trailer> getMovieTrailer(@Path("movie_id") int id, @Query("api_key") String apiKey);

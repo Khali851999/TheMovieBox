@@ -1,22 +1,46 @@
 package com.example.themoviebox;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.themoviebox.Adapters.TrailerAdapter;
+import com.example.themoviebox.Model.Movie;
 import com.example.themoviebox.Model.MovieResult;
+import com.example.themoviebox.Model.Trailer;
+import com.example.themoviebox.Model.TrailerResult;
 import com.example.themoviebox.R;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MovieDetailsActivity extends AppCompatActivity {
 
     TextView title, userrating, releasedate, plotsynopsis, thumbnailUrll;
-    RecyclerView trailer_recyclerView;
-    ImageView thumbnail_image_header,backButton;
+    RecyclerView trailer_recyclerView, similarmovies_recyclerView;
+    ImageView thumbnail_image_header, backButton, shareButton;
+    MovieResult movieResult;
+    List<TrailerResult> trailerResultList = new ArrayList<>();
+    private static final String TAG = "MovieDetailsActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,9 +56,11 @@ public class MovieDetailsActivity extends AppCompatActivity {
         thumbnail_image_header = findViewById(R.id.thumbnail_image_header);
         trailer_recyclerView = findViewById(R.id.trailer_recyclerView);
         backButton = findViewById(R.id.backButton);
+        shareButton = findViewById(R.id.shareButton);
+        similarmovies_recyclerView = findViewById(R.id.similarmovies_recyclerView);
 
 
-        MovieResult movieResult = getIntent().getExtras().getParcelable("MovieResult");
+        movieResult = getIntent().getExtras().getParcelable("MovieResult");
 
         title.setText(movieResult.getOriginalTitle());
         userrating.setText(movieResult.getVoteAverage() + "");
@@ -45,6 +71,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 .centerCrop()
                 .into(thumbnail_image_header);
 
+
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -52,5 +79,78 @@ public class MovieDetailsActivity extends AppCompatActivity {
             }
         });
 
+        shareButton.setVisibility(View.VISIBLE);
+
+        shareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                shareButton.setVisibility(View.GONE);
+
+                try {
+
+                    // create bitmap screen capture
+
+                    thumbnail_image_header = findViewById(R.id.thumbnail_image_header);
+                    thumbnail_image_header.setDrawingCacheEnabled(true);
+                    Bitmap bitmap = Bitmap.createBitmap(thumbnail_image_header.getDrawingCache());
+                    thumbnail_image_header.setDrawingCacheEnabled(false);
+
+                    String mPath = Environment.getExternalStorageDirectory().toString() + "/" + "MoviePoster" + ".jpg";
+
+                    File imageFile = new File(mPath);
+                    FileOutputStream outputStream = new FileOutputStream(imageFile);
+                    int quality = 100;
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
+                    outputStream.flush();
+                    outputStream.close();
+
+                    Intent share = new Intent(Intent.ACTION_SEND);
+                    share.setType("image/*");
+                    Uri uri = FileProvider.getUriForFile(MovieDetailsActivity.this, BuildConfig.APPLICATION_ID + ".provider", imageFile);
+                    share.putExtra(Intent.EXTRA_STREAM, uri);
+                    share.putExtra(Intent.EXTRA_TEXT, movieResult.getOriginalTitle() + "\n" +
+                            "Rating: " + movieResult.getVoteAverage() + "\n" +
+                            "Plot: " + movieResult.getOverview());
+                    startActivity(Intent.createChooser(share, "Share via"));
+
+                } catch (Throwable e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+        });
+
+        LoadTrailers();
+
+    }
+
+    public void LoadTrailers() {
+
+        trailerResultList.clear();
+        Call<Trailer> trailerResultCall = MovieDBApi.getMovieService().getTrailerDetails(movieResult.getId());
+        trailerResultCall.enqueue(new Callback<Trailer>() {
+            @Override
+            public void onResponse(Call<Trailer> call, Response<Trailer> response) {
+                Trailer trailer = response.body();
+                Log.e(TAG, "onResponse: " + trailer.getId());
+                trailerResultList = trailer.getResults();
+                Log.e(TAG, "onResponse: " + trailerResultList.get(0).getName() + "\n" + trailerResultList.get(0).getSite());
+                TrailerAdapter trailerAdapter = new TrailerAdapter(trailerResultList, MovieDetailsActivity.this);
+                trailer_recyclerView.setAdapter(trailerAdapter);
+                trailer_recyclerView.setLayoutManager(new LinearLayoutManager(MovieDetailsActivity.this));
+                trailer_recyclerView.setItemAnimator(new DefaultItemAnimator());
+            }
+
+            @Override
+            public void onFailure(Call<Trailer> call, Throwable t) {
+
+            }
+        });
+    }
+    public void LoadSimilarMovies(int movie_id){
+
+        //todo: ++++++++++++++++++++++
+        Call<Movie> movieResultCall = MovieDBApi.getMovieService().getSimilarMovies(movie_id);
     }
 }
