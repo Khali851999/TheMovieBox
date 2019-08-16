@@ -47,6 +47,8 @@ public class MovieDBApi {
         @GET("{movie_id}/similar?api_key=" + API_KEY)
         Call<Movie> getSimilarMovies(@Path("movie_id") int movie_id);
 
+        //upcomming/popular/now_playing
+
 //        @GET("{movie_id}/videos")
 //        Call<Trailer> getMovieTrailer(@Path("movie_id") int id, @Query("api_key") String apiKey);
     }

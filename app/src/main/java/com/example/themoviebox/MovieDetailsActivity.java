@@ -3,6 +3,7 @@ package com.example.themoviebox;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.themoviebox.Adapters.MovieAdapter;
 import com.example.themoviebox.Adapters.TrailerAdapter;
 import com.example.themoviebox.Model.Movie;
 import com.example.themoviebox.Model.MovieResult;
@@ -40,6 +42,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     ImageView thumbnail_image_header, backButton, shareButton;
     MovieResult movieResult;
     List<TrailerResult> trailerResultList = new ArrayList<>();
+    List<MovieResult> movieResultList = new ArrayList<>();
     private static final String TAG = "MovieDetailsActivity";
 
     @Override
@@ -122,6 +125,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         });
 
         LoadTrailers();
+        LoadSimilarMovies(movieResult.getId());
 
     }
 
@@ -148,9 +152,27 @@ public class MovieDetailsActivity extends AppCompatActivity {
             }
         });
     }
-    public void LoadSimilarMovies(int movie_id){
 
-        //todo: ++++++++++++++++++++++
+    public void LoadSimilarMovies(int movie_id) {
         Call<Movie> movieResultCall = MovieDBApi.getMovieService().getSimilarMovies(movie_id);
+        movieResultCall.enqueue(new Callback<Movie>() {
+            @Override
+            public void onResponse(Call<Movie> call, Response<Movie> response) {
+                Movie movie = response.body();
+                movieResultList = movie.getMovieResults();
+                MovieAdapter adapter = new MovieAdapter(movieResultList, MovieDetailsActivity.this);
+                RecyclerView.LayoutManager layoutManager = new GridLayoutManager(MovieDetailsActivity.this, 1, RecyclerView.HORIZONTAL, true);
+//                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MovieDetailsActivity.this, RecyclerView.HORIZONTAL, true);
+                similarmovies_recyclerView.setAdapter(adapter);
+                similarmovies_recyclerView.setLayoutManager(layoutManager);
+                similarmovies_recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+            }
+
+            @Override
+            public void onFailure(Call<Movie> call, Throwable t) {
+
+            }
+        });
     }
 }

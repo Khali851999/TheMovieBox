@@ -14,9 +14,11 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.themoviebox.Adapters.MovieAdapter;
 import com.example.themoviebox.Model.Movie;
 import com.example.themoviebox.Model.MovieResult;
@@ -43,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     int current_item, total_items, scrolledout_items;
     MovieAdapter movieAdapter;
     Button scrollToTop;
+    ImageView loading_image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +58,13 @@ public class MainActivity extends AppCompatActivity {
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setColorScheme(android.R.color.holo_orange_light);
         scrollToTop = findViewById(R.id.scrollToTop);
+        loading_image = findViewById(R.id.loading_image);
+
+        Glide.with(MainActivity.this)
+                .asGif()
+                .load(R.raw.loading)
+                .into(loading_image);
+
         scrollToTop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -74,43 +84,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                isScrolling = true;
 
-                if (page_no>=2){
-                    scrollToTop.setVisibility(View.VISIBLE);
-                }else{
-                    scrollToTop.setVisibility(View.GONE);
-                }
-            }
-
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-
-                total_items = layoutManager.getItemCount();
-                current_item = layoutManager.getChildCount();
-                scrolledout_items = ((LinearLayoutManager) layoutManager).findFirstVisibleItemPosition();
-                if (isScrolling && (current_item + scrolledout_items == total_items)) {
-
-
-                    progressBar.setVisibility(View.VISIBLE);
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            page_no += 1;
-                            LoadMoreData(page_no);
-                            Log.e(TAG, "91run: " + page_no);
-                        }
-                    }, 1000);
-                }
-            }
-        });
-
-        getData();
 
 
     }
@@ -131,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
                 recyclerView.setAdapter(movieAdapter);
                 recyclerView.setLayoutManager(layoutManager);
                 recyclerView.setItemAnimator(new DefaultItemAnimator());
+                loading_image.setVisibility(View.GONE);
 
                 swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
@@ -179,5 +154,47 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                isScrolling = true;
+
+                if (page_no>=2){
+                    scrollToTop.setVisibility(View.VISIBLE);
+                }else{
+                    scrollToTop.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                total_items = layoutManager.getItemCount();
+                current_item = layoutManager.getChildCount();
+                scrolledout_items = ((LinearLayoutManager) layoutManager).findFirstVisibleItemPosition();
+                if (isScrolling && (current_item + scrolledout_items == total_items)) {
+
+
+                    progressBar.setVisibility(View.VISIBLE);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            page_no += 1;
+                            LoadMoreData(page_no);
+                            Log.e(TAG, "91run: " + page_no);
+                        }
+                    }, 1000);
+                }
+            }
+        });
+
+        getData();
     }
 }

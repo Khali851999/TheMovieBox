@@ -6,12 +6,14 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.themoviebox.Model.TrailerResult;
 import com.example.themoviebox.R;
 
@@ -31,11 +33,13 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
     public class TrailerViewHolder extends RecyclerView.ViewHolder {
         TextView title;
         CardView card_view;
+        ImageView imageView;
 
         public TrailerViewHolder(@NonNull View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.title);
             card_view = itemView.findViewById(R.id.card_view);
+            imageView = itemView.findViewById(R.id.imageView);
         }
     }
 
@@ -57,6 +61,10 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
                 context.startActivity(intent);
             }
         });
+        Glide.with(context)
+                .load(R.drawable.youtube)
+                .centerCrop()
+                .into(holder.imageView);
     }
 
     @Override
