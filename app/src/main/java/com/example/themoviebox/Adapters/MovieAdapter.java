@@ -1,4 +1,4 @@
-package com.example.themoviebox;
+package com.example.themoviebox.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.themoviebox.Model.MovieResult;
+import com.example.themoviebox.MovieDetailsActivity;
+import com.example.themoviebox.R;
 
 import java.util.List;
 
