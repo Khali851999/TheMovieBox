@@ -17,7 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ActicityPosterView"
+            android:name=".PosterViewActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_acticity_poster_view"
             android:theme="@style/FullscreenTheme"></activity>

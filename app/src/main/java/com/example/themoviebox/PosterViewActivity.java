@@ -14,7 +14,7 @@ import android.view.View;
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class ActicityPosterView extends AppCompatActivity {
+public class PosterViewActivity extends AppCompatActivity {
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -89,7 +89,7 @@ public class ActicityPosterView extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_acticity_poster_view);
+        setContentView(R.layout.activity_poster_view);
 
         mVisible = true;
         mControlsView = findViewById(R.id.fullscreen_content_controls);

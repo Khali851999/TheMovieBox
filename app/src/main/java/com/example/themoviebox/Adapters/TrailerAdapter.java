@@ -17,7 +17,6 @@ import com.bumptech.glide.Glide;
 import com.example.themoviebox.Model.TrailerResult;
 import com.example.themoviebox.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerViewHolder> {
@@ -46,7 +45,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
     @NonNull
     @Override
     public TrailerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.trailer_row, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.trailer_card, parent, false);
         return new TrailerViewHolder(view);
     }
 

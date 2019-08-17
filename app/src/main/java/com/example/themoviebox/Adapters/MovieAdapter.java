@@ -13,7 +13,6 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.themoviebox.ActicityPosterView;
 import com.example.themoviebox.Model.MovieResult;
 import com.example.themoviebox.MovieDetailsActivity;
 import com.example.themoviebox.R;
@@ -68,7 +67,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 //            @Override
 //            public void onClick(View view) {
 //
-//                Intent intent = new Intent(context, ActicityPosterView.class);
+//                Intent intent = new Intent(context, PosterViewActivity.class);
 //                context.startActivity(intent);
 //            }
 //        });
