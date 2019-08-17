@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.themoviebox.Model.MovieResult;
-import com.example.themoviebox.MovieDetailsActivity;
+import com.example.themoviebox.Activities.MovieDetailsActivity;
 import com.example.themoviebox.R;
 
 import java.util.List;

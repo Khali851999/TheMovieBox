@@ -1,4 +1,4 @@
-package com.example.themoviebox;
+package com.example.themoviebox.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,9 +19,11 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.themoviebox.API.MovieDBApi;
 import com.example.themoviebox.Adapters.MovieAdapter;
 import com.example.themoviebox.Model.Movie;
 import com.example.themoviebox.Model.MovieResult;
+import com.example.themoviebox.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +32,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.example.themoviebox.MovieDBApi.API_KEY;
+import static com.example.themoviebox.API.MovieDBApi.API_KEY;
 
 public class MainActivity extends AppCompatActivity {
 

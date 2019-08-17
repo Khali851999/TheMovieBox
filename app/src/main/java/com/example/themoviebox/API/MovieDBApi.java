@@ -1,4 +1,4 @@
-package com.example.themoviebox;
+package com.example.themoviebox.API;
 
 import com.example.themoviebox.Model.Movie;
 import com.example.themoviebox.Model.Trailer;

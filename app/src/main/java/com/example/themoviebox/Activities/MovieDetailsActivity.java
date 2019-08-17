@@ -1,4 +1,4 @@
-package com.example.themoviebox;
+package com.example.themoviebox.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
@@ -18,8 +18,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.themoviebox.API.MovieDBApi;
 import com.example.themoviebox.Adapters.MovieAdapter;
 import com.example.themoviebox.Adapters.TrailerAdapter;
+import com.example.themoviebox.BuildConfig;
 import com.example.themoviebox.Model.Movie;
 import com.example.themoviebox.Model.MovieResult;
 import com.example.themoviebox.Model.Trailer;
