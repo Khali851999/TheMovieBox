@@ -78,7 +78,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/plotsynopsis" />
 
                 <TextView
-                    android:id="@+id/trailer"
+                    android:id="@+id/trailerTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
@@ -109,7 +109,7 @@
                     android:clipToPadding="false"
                     android:scrollbars="vertical"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/trailer" />
+                    app:layout_constraintTop_toBottomOf="@+id/trailerTextView" />
 
                 <TextView
                     android:id="@+id/reviewTextView"

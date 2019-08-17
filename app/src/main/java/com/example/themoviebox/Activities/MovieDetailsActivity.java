@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.themoviebox.API.MovieDBApi;
 import com.example.themoviebox.Adapters.MovieAdapter;
+import com.example.themoviebox.Adapters.ReviewAdapter;
 import com.example.themoviebox.Adapters.TrailerAdapter;
 import com.example.themoviebox.BuildConfig;
 import com.example.themoviebox.Model.Movie;
@@ -46,7 +47,7 @@ import retrofit2.Response;
 
 public class MovieDetailsActivity extends AppCompatActivity {
 
-    TextView title, userrating, releasedate, plotsynopsis, thumbnailUrll;
+    TextView title, userrating, releasedate, plotsynopsis, thumbnailUrll, reviewTextView, trailerTextView, similarmovieTextview;
     RecyclerView trailer_recyclerView, similarmovies_recyclerView, moviereview_recyclerView;
     ImageView thumbnail_image_header, backButton, shareButton;
     MovieResult movieResult;
@@ -74,6 +75,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
         shareButton = findViewById(R.id.shareButton);
         similarmovies_recyclerView = findViewById(R.id.similarmovies_recyclerView);
         moviereview_recyclerView = findViewById(R.id.moviereview_recyclerView);
+        reviewTextView = findViewById(R.id.reviewTextView);
+        trailerTextView = findViewById(R.id.trailerTextView);
+        similarmovieTextview = findViewById(R.id.similarmovieTextvIEW);
 
 
         movieResult = getIntent().getExtras().getParcelable("MovieResult");
@@ -154,8 +158,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
             }
         });
 
-        LoadTrailers();
-        LoadSimilarMovies(movieResult.getId());
 
     }
 
@@ -167,12 +169,25 @@ public class MovieDetailsActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Trailer> call, Response<Trailer> response) {
                 Trailer trailer = response.body();
-                Log.e(TAG, "onResponse: " + trailer.getId());
-                trailerResultList = trailer.getResults();
-                TrailerAdapter trailerAdapter = new TrailerAdapter(trailerResultList, MovieDetailsActivity.this);
-                trailer_recyclerView.setAdapter(trailerAdapter);
-                trailer_recyclerView.setLayoutManager(new LinearLayoutManager(MovieDetailsActivity.this));
-                trailer_recyclerView.setItemAnimator(new DefaultItemAnimator());
+                if (trailer == null) {
+                    try {
+                        Log.e(TAG, "onResponse: " + response.errorBody().string());
+                        Toast.makeText(MovieDetailsActivity.this, "Error Occured", Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    trailerResultList = trailer.getResults();
+                    if (trailerResultList.isEmpty()) {
+                        trailer_recyclerView.setVisibility(View.GONE);
+                        trailerTextView.setVisibility(View.GONE);
+                    } else {
+                        TrailerAdapter trailerAdapter = new TrailerAdapter(trailerResultList, MovieDetailsActivity.this);
+                        trailer_recyclerView.setAdapter(trailerAdapter);
+                        trailer_recyclerView.setLayoutManager(new LinearLayoutManager(MovieDetailsActivity.this));
+                        trailer_recyclerView.setItemAnimator(new DefaultItemAnimator());
+                    }
+                }
             }
 
             @Override
@@ -197,13 +212,18 @@ public class MovieDetailsActivity extends AppCompatActivity {
                     }
                 } else {
                     movieResultList = movie.getMovieResults();
-                    MovieAdapter adapter = new MovieAdapter(movieResultList, MovieDetailsActivity.this);
-                    RecyclerView.LayoutManager layoutManager = new GridLayoutManager(MovieDetailsActivity.this, 1, RecyclerView.HORIZONTAL, true);
+                    if (movieResultList.isEmpty()) {
+                        similarmovies_recyclerView.setVisibility(View.GONE);
+                        trailerTextView.setVisibility(View.GONE);
+                    } else {
+                        MovieAdapter adapter = new MovieAdapter(movieResultList, MovieDetailsActivity.this);
+                        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(MovieDetailsActivity.this, 1, RecyclerView.HORIZONTAL, true);
 //                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MovieDetailsActivity.this, RecyclerView.HORIZONTAL, true);
-                    similarmovies_recyclerView.setAdapter(adapter);
-                    similarmovies_recyclerView.setLayoutManager(layoutManager);
-                    similarmovies_recyclerView.setItemAnimator(new DefaultItemAnimator());
+                        similarmovies_recyclerView.setAdapter(adapter);
+                        similarmovies_recyclerView.setLayoutManager(layoutManager);
+                        similarmovies_recyclerView.setItemAnimator(new DefaultItemAnimator());
 
+                    }
                 }
             }
 
@@ -217,28 +237,51 @@ public class MovieDetailsActivity extends AppCompatActivity {
     }
 
     public void LoadMovieReviews(int movie_id) {
-        Call<Review> reviewCall = MovieDBApi.getMovieService().getReviews(movie_id);
+        final Call<Review> reviewCall = MovieDBApi.getMovieService().getReviews(movie_id);
         reviewCall.enqueue(new Callback<Review>() {
             @Override
             public void onResponse(Call<Review> call, Response<Review> response) {
                 Review review = response.body();
                 if (review == null) {
                     try {
-                        Log.e(TAG, "onResponse: "+response.errorBody().string() );
+                        Log.e(TAG, "onResponse: " + response.errorBody().string());
                         //todo: hide recycler view and tv
+                        moviereview_recyclerView.setVisibility(View.GONE);
+                        reviewTextView.setVisibility(View.GONE);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 } else {
                     reviewResultList = review.getResults();
+                    if (reviewResultList.isEmpty()) {
+                        moviereview_recyclerView.setVisibility(View.GONE);
+                        reviewTextView.setVisibility(View.GONE);
+                    } else {
+                        ReviewAdapter reviewAdapter = new ReviewAdapter(reviewResultList, MovieDetailsActivity.this);
+                        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(MovieDetailsActivity.this, 1, RecyclerView.HORIZONTAL, true);
+                        moviereview_recyclerView.setLayoutManager(new LinearLayoutManager(MovieDetailsActivity.this));
+                        moviereview_recyclerView.setAdapter(reviewAdapter);
+                        moviereview_recyclerView.setItemAnimator(new DefaultItemAnimator());
 
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<Review> call, Throwable t) {
 
+                Log.e(TAG, "onFailure: " + t.getMessage() + "\n" + t.getCause());
+                Toast.makeText(MovieDetailsActivity.this, "Error Occurred", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        LoadTrailers();
+        LoadSimilarMovies(movieResult.getId());
+        LoadMovieReviews(movieResult.getId());
     }
 }

@@ -1,6 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="10dp"
+    android:orientation="vertical">
 
-</LinearLayout>
+    <androidx.cardview.widget.CardView
+        android:id="@+id/reviewCardview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:elevation="5dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="5dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/nameTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-black"
+                android:text="Akshat"
+                android:textColor="#000000"
+                android:textSize="20sp"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/contentTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxWidth="400dp"
+                android:maxLines="5"
+                android:text="By this point in the franchise, ‘Fast and Furious’ fans will know exactly what to expect from ‘Hobbs and Shaw’, and there’s just enough here that's fresh enough to warrant taking another ride with the series."
+                app:layout_constraintTop_toBottomOf="@id/nameTextView" />
+
+            <TextView
+                android:id="@+id/urlDescriptionTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Read Ashley's full article..."
+                android:textColor="#000000"
+                app:layout_constraintTop_toBottomOf="@id/contentTextView" />
+
+            <TextView
+                android:id="@+id/urlTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:autoLink="web"
+                android:linksClickable="true"
+                android:text="https://www.maketheswitch.com.au/article/review-fast-and-furious-hobbs-and-shaw-very-furious-not-so-fast"
+                android:textColorLink="@color/colorPrimaryDark"
+                app:layout_constraintLeft_toRightOf="@id/urlDescriptionTextView"
+                app:layout_constraintTop_toBottomOf="@id/contentTextView" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
