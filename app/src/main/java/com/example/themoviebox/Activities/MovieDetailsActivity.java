@@ -72,9 +72,18 @@ public class MovieDetailsActivity extends AppCompatActivity {
         releasedate.setText(movieResult.getReleaseDate());
         plotsynopsis.setText(movieResult.getOverview());
         Glide.with(MovieDetailsActivity.this)
-                .load("https://image.tmdb.org/t/p/w500" + movieResult.getPosterPath())
+                .load("https://image.tmdb.org/t/p/w500/" + movieResult.getPosterPath())
                 .centerCrop()
                 .into(thumbnail_image_header);
+        thumbnail_image_header.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(MovieDetailsActivity.this, PosterViewActivity.class);
+                intent.putExtra("ImageUrl", "https://image.tmdb.org/t/p/w500/" + movieResult.getPosterPath());
+                startActivity(intent);
+            }
+        });
 
 
         backButton.setOnClickListener(new View.OnClickListener() {
