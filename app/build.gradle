@@ -35,5 +35,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.6.1'
     implementation 'com.google.android.material:material:1.0.0-rc01'
     implementation 'com.github.ivbaranov:materialfavoritebutton:0.1.5'
-
+    implementation 'com.github.VRGsoftUA:RollingLayoutManager:1.0'
+    implementation 'com.github.adgvcxz:cardlayoutmanager:0.2.1'
+    implementation 'com.github.adityagohad:HorizontalPicker:1.0.1'
 }

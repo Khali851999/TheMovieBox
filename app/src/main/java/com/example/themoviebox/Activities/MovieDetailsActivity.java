@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.themoviebox.API.MovieDBApi;
@@ -32,6 +33,7 @@ import com.example.themoviebox.R;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -45,7 +47,7 @@ import retrofit2.Response;
 public class MovieDetailsActivity extends AppCompatActivity {
 
     TextView title, userrating, releasedate, plotsynopsis, thumbnailUrll;
-    RecyclerView trailer_recyclerView, similarmovies_recyclerView,moviereview_recyclerView;
+    RecyclerView trailer_recyclerView, similarmovies_recyclerView, moviereview_recyclerView;
     ImageView thumbnail_image_header, backButton, shareButton;
     MovieResult movieResult;
     List<TrailerResult> trailerResultList = new ArrayList<>();
@@ -90,7 +92,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         plotsynopsis.setText(movieResult.getOverview());
         Glide.with(MovieDetailsActivity.this)
                 .load("https://image.tmdb.org/t/p/w500/" + movieResult.getPosterPath())
-                .centerCrop()
+                .fitCenter()
                 .into(thumbnail_image_header);
         thumbnail_image_header.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -167,7 +169,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 Trailer trailer = response.body();
                 Log.e(TAG, "onResponse: " + trailer.getId());
                 trailerResultList = trailer.getResults();
-                Log.e(TAG, "onResponse: " + trailerResultList.get(0).getName() + "\n" + trailerResultList.get(0).getSite());
                 TrailerAdapter trailerAdapter = new TrailerAdapter(trailerResultList, MovieDetailsActivity.this);
                 trailer_recyclerView.setAdapter(trailerAdapter);
                 trailer_recyclerView.setLayoutManager(new LinearLayoutManager(MovieDetailsActivity.this));
@@ -187,31 +188,51 @@ public class MovieDetailsActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Movie> call, Response<Movie> response) {
                 Movie movie = response.body();
-                movieResultList = movie.getMovieResults();
-                MovieAdapter adapter = new MovieAdapter(movieResultList, MovieDetailsActivity.this);
-                RecyclerView.LayoutManager layoutManager = new GridLayoutManager(MovieDetailsActivity.this, 1, RecyclerView.HORIZONTAL, true);
+                if (movie == null) {
+                    try {
+                        Log.e(TAG, "onResponse: " + response.errorBody().string());
+                        Toast.makeText(MovieDetailsActivity.this, "Error Occured", Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    movieResultList = movie.getMovieResults();
+                    MovieAdapter adapter = new MovieAdapter(movieResultList, MovieDetailsActivity.this);
+                    RecyclerView.LayoutManager layoutManager = new GridLayoutManager(MovieDetailsActivity.this, 1, RecyclerView.HORIZONTAL, true);
 //                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MovieDetailsActivity.this, RecyclerView.HORIZONTAL, true);
-                similarmovies_recyclerView.setAdapter(adapter);
-                similarmovies_recyclerView.setLayoutManager(layoutManager);
-                similarmovies_recyclerView.setItemAnimator(new DefaultItemAnimator());
+                    similarmovies_recyclerView.setAdapter(adapter);
+                    similarmovies_recyclerView.setLayoutManager(layoutManager);
+                    similarmovies_recyclerView.setItemAnimator(new DefaultItemAnimator());
 
+                }
             }
 
             @Override
             public void onFailure(Call<Movie> call, Throwable t) {
 
+                Log.e(TAG, "onFailure: " + t.getMessage() + "\n" + t.getCause());
+                Toast.makeText(MovieDetailsActivity.this, "Error Occurred", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    public void LoadMovieReviews(int movie_id){
+    public void LoadMovieReviews(int movie_id) {
         Call<Review> reviewCall = MovieDBApi.getMovieService().getReviews(movie_id);
         reviewCall.enqueue(new Callback<Review>() {
             @Override
             public void onResponse(Call<Review> call, Response<Review> response) {
                 Review review = response.body();
-                reviewResultList = review.getResults();
+                if (review == null) {
+                    try {
+                        Log.e(TAG, "onResponse: "+response.errorBody().string() );
+                        //todo: hide recycler view and tv
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    reviewResultList = review.getResults();
 
+                }
             }
 
             @Override

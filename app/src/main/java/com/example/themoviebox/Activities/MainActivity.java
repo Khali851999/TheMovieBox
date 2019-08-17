@@ -25,6 +25,9 @@ import com.example.themoviebox.Model.Movie;
 import com.example.themoviebox.Model.MovieResult;
 import com.example.themoviebox.R;
 
+import net.vrgsoft.layoutmanager.RollingLayoutManager;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,17 +79,16 @@ public class MainActivity extends AppCompatActivity {
         });
 
         if (MainActivity.this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            layoutManager = new GridLayoutManager(MainActivity.this, 2);
+//            layoutManager = new GridLayoutManager(MainActivity.this, 2);
             recyclerView.setLayoutManager(layoutManager);
 
         } else {
-            layoutManager = new GridLayoutManager(MainActivity.this, 4);
+//            layoutManager = new GridLayoutManager(MainActivity.this, 4);
             recyclerView.setLayoutManager(layoutManager);
 
         }
 
-
-
+        layoutManager = new RollingLayoutManager(MainActivity.this);
 
 
     }
@@ -99,28 +101,35 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Movie> call, Response<Movie> response) {
                 Movie movie = response.body();
-                Toast.makeText(MainActivity.this, "Data Loaded", Toast.LENGTH_SHORT).show();
-
-                movieResultArrayList = movie.getMovieResults();
-                Log.e(TAG, "onResponse: " + movieResultArrayList.size());
-                movieAdapter = new MovieAdapter(movieResultArrayList, MainActivity.this);
-                recyclerView.setAdapter(movieAdapter);
-                recyclerView.setLayoutManager(layoutManager);
-                recyclerView.setItemAnimator(new DefaultItemAnimator());
-                loading_image.setVisibility(View.GONE);
-
-                swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                    @Override
-                    public void onRefresh() {
-                        movieAdapter.notifyDataSetChanged();
-                        recyclerView.setAdapter(movieAdapter);
-                        recyclerView.setLayoutManager(layoutManager);
-                        recyclerView.smoothScrollToPosition(0);
-                        recyclerView.setItemAnimator(new DefaultItemAnimator());
-                        swipeRefreshLayout.setRefreshing(false);
+                if (movie == null) {
+                    try {
+                        Log.e(TAG, "onResponse:getData: " + response.errorBody().string());
+                        Toast.makeText(MainActivity.this, "ErrorOccured", Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                });
+                } else {
+                    movieResultArrayList = movie.getMovieResults();
+                    Log.e(TAG, "onResponse: " + movieResultArrayList.size());
+                    movieAdapter = new MovieAdapter(movieResultArrayList, MainActivity.this);
+                    recyclerView.setAdapter(movieAdapter);
+                    recyclerView.setLayoutManager(layoutManager);
+                    recyclerView.setItemAnimator(new DefaultItemAnimator());
+                    loading_image.setVisibility(View.GONE);
 
+                    swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                        @Override
+                        public void onRefresh() {
+                            movieAdapter.notifyDataSetChanged();
+                            recyclerView.setAdapter(movieAdapter);
+                            recyclerView.setLayoutManager(layoutManager);
+                            recyclerView.smoothScrollToPosition(0);
+                            recyclerView.setItemAnimator(new DefaultItemAnimator());
+                            swipeRefreshLayout.setRefreshing(false);
+                        }
+                    });
+
+                }
             }
 
             @Override
@@ -142,10 +151,16 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<Movie> call, Response<Movie> response) {
                 Movie movie = response.body();
 
-                movieResultArrayList.addAll(movie.getMovieResults());
-                movieAdapter.notifyDataSetChanged();
-                progressBar.setVisibility(View.INVISIBLE);
+                if (movie == null) {
+                    Log.e(TAG, "onResponse:LoadMoreData: " + response.errorBody().toString());
+                    Toast.makeText(MainActivity.this, "Error Occured", Toast.LENGTH_SHORT).show();
 
+                } else {
+                    movieResultArrayList.addAll(movie.getMovieResults());
+                    movieAdapter.notifyDataSetChanged();
+                    progressBar.setVisibility(View.INVISIBLE);
+
+                }
             }
 
             @Override
@@ -167,9 +182,9 @@ public class MainActivity extends AppCompatActivity {
                 super.onScrollStateChanged(recyclerView, newState);
                 isScrolling = true;
 
-                if (page_no>=2){
+                if (page_no >= 2) {
                     scrollToTop.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     scrollToTop.setVisibility(View.GONE);
                 }
             }
