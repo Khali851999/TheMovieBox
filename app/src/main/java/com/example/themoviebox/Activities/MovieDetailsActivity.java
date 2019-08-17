@@ -24,13 +24,18 @@ import com.example.themoviebox.Adapters.TrailerAdapter;
 import com.example.themoviebox.BuildConfig;
 import com.example.themoviebox.Model.Movie;
 import com.example.themoviebox.Model.MovieResult;
+import com.example.themoviebox.Model.Review;
+import com.example.themoviebox.Model.ReviewResult;
 import com.example.themoviebox.Model.Trailer;
 import com.example.themoviebox.Model.TrailerResult;
 import com.example.themoviebox.R;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -40,12 +45,15 @@ import retrofit2.Response;
 public class MovieDetailsActivity extends AppCompatActivity {
 
     TextView title, userrating, releasedate, plotsynopsis, thumbnailUrll;
-    RecyclerView trailer_recyclerView, similarmovies_recyclerView;
+    RecyclerView trailer_recyclerView, similarmovies_recyclerView,moviereview_recyclerView;
     ImageView thumbnail_image_header, backButton, shareButton;
     MovieResult movieResult;
     List<TrailerResult> trailerResultList = new ArrayList<>();
     List<MovieResult> movieResultList = new ArrayList<>();
+    List<ReviewResult> reviewResultList = new ArrayList<>();
     private static final String TAG = "MovieDetailsActivity";
+    Date date;
+    String dateString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,13 +71,22 @@ public class MovieDetailsActivity extends AppCompatActivity {
         backButton = findViewById(R.id.backButton);
         shareButton = findViewById(R.id.shareButton);
         similarmovies_recyclerView = findViewById(R.id.similarmovies_recyclerView);
+        moviereview_recyclerView = findViewById(R.id.moviereview_recyclerView);
 
 
         movieResult = getIntent().getExtras().getParcelable("MovieResult");
 
         title.setText(movieResult.getOriginalTitle());
         userrating.setText(movieResult.getVoteAverage() + "");
-        releasedate.setText(movieResult.getReleaseDate());
+
+        //todo: ++++++++++++++++
+        try {
+            date = new SimpleDateFormat("yyyy-mm-dd").parse(movieResult.getReleaseDate());
+            dateString = new SimpleDateFormat("dd-MMM-yyyy").format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        releasedate.setText("Release Date: " + dateString + ":" + movieResult.getReleaseDate());
         plotsynopsis.setText(movieResult.getOverview());
         Glide.with(MovieDetailsActivity.this)
                 .load("https://image.tmdb.org/t/p/w500/" + movieResult.getPosterPath())
@@ -182,6 +199,23 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Movie> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public void LoadMovieReviews(int movie_id){
+        Call<Review> reviewCall = MovieDBApi.getMovieService().getReviews(movie_id);
+        reviewCall.enqueue(new Callback<Review>() {
+            @Override
+            public void onResponse(Call<Review> call, Response<Review> response) {
+                Review review = response.body();
+                reviewResultList = review.getResults();
+
+            }
+
+            @Override
+            public void onFailure(Call<Review> call, Throwable t) {
 
             }
         });

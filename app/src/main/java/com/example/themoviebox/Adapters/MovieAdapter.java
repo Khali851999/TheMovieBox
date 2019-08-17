@@ -1,7 +1,9 @@
 package com.example.themoviebox.Adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,6 +60,13 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
     @Override
     public void onBindViewHolder(@NonNull MovieViewHolder holder, final int position) {
+
+//        DisplayMetrics displayMetrics = new DisplayMetrics();
+//        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+//        int height = displayMetrics.heightPixels;
+//        int width = displayMetrics.widthPixels;
+//
+//        holder.card_view.setMinimumWidth(10);
 
         Glide.with(context)
                 .load("https://image.tmdb.org/t/p/w500" + movieResultArrayList.get(position).getPosterPath())

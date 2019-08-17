@@ -1,6 +1,7 @@
 package com.example.themoviebox.API;
 
 import com.example.themoviebox.Model.Movie;
+import com.example.themoviebox.Model.Review;
 import com.example.themoviebox.Model.Trailer;
 
 import retrofit2.Call;
@@ -46,6 +47,9 @@ public class MovieDBApi {
 
         @GET("{movie_id}/similar?api_key=" + API_KEY)
         Call<Movie> getSimilarMovies(@Path("movie_id") int movie_id);
+
+        @GET("{movie_id}/reviews?api_key=" + API_KEY)
+        Call<Review> getReviews(@Path("movie_id") int movie_id);
 
         //upcomming/popular/now_playing
 
