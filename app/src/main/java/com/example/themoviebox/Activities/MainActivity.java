@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -24,6 +25,7 @@ import com.example.themoviebox.Adapters.MovieAdapter;
 import com.example.themoviebox.Model.Movie;
 import com.example.themoviebox.Model.MovieResult;
 import com.example.themoviebox.R;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import net.vrgsoft.layoutmanager.RollingLayoutManager;
 
@@ -51,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
     MovieAdapter movieAdapter;
     Button scrollToTop;
     ImageView loading_image;
+    BottomSheetBehavior bottomSheetBehavior;
+    LinearLayout llBottomSheet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,23 +62,51 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         page_no = 2;
 
+
         progressBar = findViewById(R.id.progressbar);
         recyclerView = findViewById(R.id.recyclerView);
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setColorScheme(android.R.color.holo_orange_light);
         scrollToTop = findViewById(R.id.scrollToTop);
         loading_image = findViewById(R.id.loading_image);
+        llBottomSheet = findViewById(R.id.bottom_sheet);
+
 
         Glide.with(MainActivity.this)
                 .asGif()
                 .load(R.raw.loading)
                 .into(loading_image);
 
+
+// init the bottom sheet behavior
+        bottomSheetBehavior = BottomSheetBehavior.from(llBottomSheet);
+
+
+// change the state of the bottom sheet
+//        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+//        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+//        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+
+
+// set callback for changes
+        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+
+            }
+        });
+
         scrollToTop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 recyclerView.smoothScrollToPosition(0);
                 scrollToTop.setVisibility(View.GONE);
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
             }
         });
 

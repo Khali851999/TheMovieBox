@@ -45,7 +45,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
             title = itemView.findViewById(R.id.title);
             userrating = itemView.findViewById(R.id.userrating);
             card_view = itemView.findViewById(R.id.card_view);
-            zoomImageView = itemView.findViewById(R.id.zoomImageView);
+//            zoomImageView = itemView.findViewById(R.id.zoomImageView);
 
 
             Glide.with(context)
