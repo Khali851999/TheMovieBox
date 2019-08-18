@@ -7,6 +7,8 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,7 +34,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     }
 
     public class MovieViewHolder extends RecyclerView.ViewHolder {
-        ImageView thumbnail;
+        ImageView thumbnail, zoomImageView;
         TextView title, userrating;
         CardView card_view;
 
@@ -43,6 +45,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
             title = itemView.findViewById(R.id.title);
             userrating = itemView.findViewById(R.id.userrating);
             card_view = itemView.findViewById(R.id.card_view);
+            zoomImageView = itemView.findViewById(R.id.zoomImageView);
+
 
             Glide.with(context)
                     .asGif()
@@ -59,7 +63,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MovieViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final MovieViewHolder holder, final int position) {
 
 //        DisplayMetrics displayMetrics = new DisplayMetrics();
 //        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -90,6 +94,38 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
                 context.startActivity(intent);
             }
         });
+
+
+//        Glide.with(context)
+//                .load("https://image.tmdb.org/t/p/w500" + movieResultArrayList.get(position).getPosterPath())
+//                .centerCrop()
+//                .into(holder.zoomImageView);
+//
+//        final Animation animation = AnimationUtils.loadAnimation(context, R.anim.zoom_movie_card);
+//        animation.setAnimationListener(new Animation.AnimationListener() {
+//            @Override
+//            public void onAnimationStart(Animation animation) {
+//
+//            }
+//
+//            @Override
+//            public void onAnimationEnd(Animation animation) {
+//
+//            }
+//
+//            @Override
+//            public void onAnimationRepeat(Animation animation) {
+//
+//            }
+//        });
+//        holder.card_view.setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View view) {
+//                holder.zoomImageView.setVisibility(View.VISIBLE);
+//                holder.zoomImageView.startAnimation(animation);
+//                return true;
+//            }
+//        });
     }
 
     @Override

@@ -245,7 +245,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 if (review == null) {
                     try {
                         Log.e(TAG, "onResponse: " + response.errorBody().string());
-                        //todo: hide recycler view and tv
+
                         moviereview_recyclerView.setVisibility(View.GONE);
                         reviewTextView.setVisibility(View.GONE);
                     } catch (IOException e) {
@@ -259,7 +259,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                     } else {
                         ReviewAdapter reviewAdapter = new ReviewAdapter(reviewResultList, MovieDetailsActivity.this);
                         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(MovieDetailsActivity.this, 1, RecyclerView.HORIZONTAL, true);
-                        moviereview_recyclerView.setLayoutManager(new LinearLayoutManager(MovieDetailsActivity.this));
+                        moviereview_recyclerView.setLayoutManager(layoutManager);
                         moviereview_recyclerView.setAdapter(reviewAdapter);
                         moviereview_recyclerView.setItemAnimator(new DefaultItemAnimator());
 

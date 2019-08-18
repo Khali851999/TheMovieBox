@@ -36,6 +36,9 @@ public class MovieDBApi {
 
     public interface MovieService {
 
+        //todo: long press on movie card to view details
+        //imdb rating
+
         @GET("upcoming?api_key=" + API_KEY)
         Call<Movie> getMovieDetails();
 

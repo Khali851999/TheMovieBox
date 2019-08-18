@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.themoviebox.Model.ReviewResult;
@@ -61,8 +62,10 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
         });
         holder.nameTextView.setText(reviewResultList.get(position).getAuthor());
         holder.contentTextView.setText(reviewResultList.get(position).getContent());
-        holder.urlDescriptionTextView.setText("Read "+reviewResultList.get(position).getAuthor()+" full article: ");
+        holder.urlDescriptionTextView.setText("Read " + reviewResultList.get(position).getAuthor() + " full article: ");
         holder.urlTextView.setText(reviewResultList.get(position).getUrl());
+
+
     }
 
     @Override

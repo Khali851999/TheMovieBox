@@ -90,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
 
         layoutManager = new RollingLayoutManager(MainActivity.this);
 
+        getData();
 
     }
 
@@ -212,6 +213,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        getData();
+
     }
 }
